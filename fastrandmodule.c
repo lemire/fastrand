@@ -20,7 +20,7 @@ static inline uint32_t pcg32_random_r(pcg32_random_t* rng) {
     return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
 }
 
-static inline uint32_t pcg32_random() {
+static inline uint32_t pcg32_random(void) {
     return pcg32_random_r(&pcg32_global);
 }
 
@@ -91,9 +91,9 @@ xorshift(PyObject* self, PyObject* args)
 
 
 
-static PyMethodDef HelloMethods[] =
+static PyMethodDef FastRandMethods[] =
 {
-     {"xorshift128plus", xorshift128plus, METH_NOARGS, "generate random integer (64 bits)"},
+     {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits)"},
      {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG"},
      {"pcg32bounded", pcg32bounded, METH_VARARGS, "generate random integer in the interval [0,range) using PCG."},
 
@@ -101,7 +101,7 @@ static PyMethodDef HelloMethods[] =
 };
 
 PyMODINIT_FUNC
-inithello(void)
+initfastrand(void)
 {
-     (void) Py_InitModule("hello", HelloMethods);
+     (void) Py_InitModule("fastrand", FastRandMethods);
 }
