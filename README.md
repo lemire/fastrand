@@ -35,4 +35,4 @@ David Andersen points out that
 
 is much faster.
 
-
+Also look at https://github.com/rkern/line_profiler
