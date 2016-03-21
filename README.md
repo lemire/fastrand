@@ -3,11 +3,11 @@ Fast random number generation in Python
 
 Not ready for actual use. Experimental.
 
-Requirements: Linux-like system, a C compiler, Python.
+Requirements: Linux-like system (including a Mac), a C compiler, Python.
 
 ```
 python setup.py build
-python setup.py install --home=~
+python setup.py install --home=$HOME
 PYTHONPATH=$PYTHONPATH:~/lib/python
 ```
 
