@@ -26,4 +26,13 @@ $ python -m timeit -s 'import random' 'int(random.random() * 1001)'
 10000000 loops, best of 3: 0.145 usec per loop
 ```
 
+## future work
+
+David Andersen points out that 
+
+ 
+``python -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'``
+
+is much faster.
+
 
