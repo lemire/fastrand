@@ -3,11 +3,11 @@ Fast random number generation in Python
 
 Not ready for actual use. Experimental.
 
-Requirements: Linux-like system, a C compiler, Python.
+Requirements: Linux-like system (including a Mac), a C compiler, Python.
 
 ```
 python setup.py build
-python setup.py install --home=~
+python setup.py install --home=$HOME
 PYTHONPATH=$PYTHONPATH:~/lib/python
 ```
 
@@ -25,5 +25,14 @@ $ python -m timeit -s 'import random' 'random.randint(0,1000)'
 $ python -m timeit -s 'import random' 'int(random.random() * 1001)'
 10000000 loops, best of 3: 0.145 usec per loop
 ```
+
+## future work
+
+David Andersen points out that 
+
+ 
+``python -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'``
+
+is much faster.
 
 
