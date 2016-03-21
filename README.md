@@ -3,8 +3,12 @@ Fast random number generation in Python
 
 Not ready for actual use. Experimental.
 
+Requirements: Linux-like system, a C compiler, Python.
+
 ```
 python setup.py build
+python setup.py install --home=~
+PYTHONPATH=$PYTHONPATH:~/lib/python
 ```
 
 
