@@ -100,8 +100,30 @@ static PyMethodDef FastRandMethods[] =
      {NULL, NULL, 0, NULL}
 };
 
+#if PY_MAJOR_VERSION >= 3
+
+static struct PyModuleDef cModFastrand =
+{
+    PyModuleDef_HEAD_INIT,
+    "fastrand",
+    "",
+    -1,
+    FastRandMethods
+};
+
+
+PyMODINIT_FUNC 
+PyInit_fastrand(void)
+{
+     return PyModule_Create(&cModFastrand);
+}
+
+#else
+
 PyMODINIT_FUNC
 initfastrand(void)
 {
      (void) Py_InitModule("fastrand", FastRandMethods);
 }
+
+#endif
