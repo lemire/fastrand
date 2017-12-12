@@ -1,6 +1,8 @@
 # fastrand
 Fast random number generation in Python
 
+Blog post: [Ranged random-number generation is slow in Python…](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
+
 Requirements: Linux-like system (including a Mac), a C compiler, Python.
 
 ```
