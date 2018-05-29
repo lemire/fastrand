@@ -25,3 +25,7 @@ python -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
 ## future work
 
 Also look at https://github.com/rkern/line_profiler
+
+## Reference
+
+* Daniel Lemire, [Fast Random Integer Generation in an Interval](https://arxiv.org/abs/1805.10941), ACM Transactions on Modeling and Computer Simulation (to appear)
