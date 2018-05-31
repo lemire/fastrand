@@ -1,11 +1,11 @@
 # fastrand
-Fast random number generation in Python
+Fast random number generation in Python using PCG
 
 Blog post: [Ranged random-number generation is slow in Python…](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
 
 Requirements: Linux-like system (including a Mac), a C compiler, Python.
 
-```
+```bash
 python setup.py build
 python setup.py install --home=$HOME
 export PYTHONPATH=$PYTHONPATH:~/lib/python
@@ -13,14 +13,14 @@ export PYTHONPATH=$PYTHONPATH:~/lib/python
 
 Usage... (don't forget to type the above lines in your shell!)
 
-```
+```python
 import fastrand
 
 print("generate an integer in [0,1001)")
 fastrand.pcg32bounded(1001) 
 print("Generate a random 32-bit integer.")
 fastrand.pcg32()
-
+```
 
 It is nearly an order of magnitude faster than the alternatives:
 
