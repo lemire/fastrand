@@ -56,7 +56,8 @@ pcg32bounded(PyObject* self, PyObject* args)
     // int n;
     //if (!PyArg_ParseTuple(args, "i", &n))
     //    return NULL;
-    unsigned long n = PyLong_AsUnsignedLong(args);
+    long n = PyLong_AsLong(args);
+    if (n <= 0) return PyErr_Occurred() ? NULL : (Py_INCREF(Py_None), Py_None);
     return Py_BuildValue("i", pcg32_random_bounded_divisionless(n));
 }
 
