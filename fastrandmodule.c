@@ -53,9 +53,10 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 static PyObject*
 pcg32bounded(PyObject* self, PyObject* args)
 {
-     int n;
-    if (!PyArg_ParseTuple(args, "i", &n))
-        return NULL;
+    // int n;
+    //if (!PyArg_ParseTuple(args, "i", &n))
+    //    return NULL;
+    unsigned long n = PyLong_AsUnsignedLong(args);
     return Py_BuildValue("i", pcg32_random_bounded_divisionless(n));
 }
 
@@ -95,8 +96,8 @@ static PyMethodDef FastRandMethods[] =
 {
      {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits)"},
      {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG"},
-     {"pcg32bounded", pcg32bounded, METH_VARARGS, "generate random integer in the interval [0,range) using PCG."},
-
+     //{"pcg32bounded", pcg32bounded, METH_VARARGS, "generate random integer in the interval [0,range) using PCG."},
+     {"pcg32bounded", pcg32bounded, METH_O, "generate random integer in the interval [0,range) using PCG."},
      {NULL, NULL, 0, NULL}
 };
 
@@ -112,7 +113,7 @@ static struct PyModuleDef cModFastrand =
 };
 
 
-PyMODINIT_FUNC 
+PyMODINIT_FUNC
 PyInit_fastrand(void)
 {
      return PyModule_Create(&cModFastrand);
