@@ -50,15 +50,18 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 }
 
 
+#if PY_MAJOR_VERSION >= 3
+#define PyInt_AsLong(x)   PyLong_AsLong(x)
+#endif
+
 static PyObject*
-pcg32bounded(PyObject* self, PyObject* args)
-{
-    // int n;
-    //if (!PyArg_ParseTuple(args, "i", &n))
-    //    return NULL;
-    long n = PyLong_AsLong(args);
-    if (n <= 0) return PyErr_Occurred() ? NULL : (Py_INCREF(Py_None), Py_None);
-    return Py_BuildValue("i", pcg32_random_bounded_divisionless(n));
+pcg32bounded(PyObject* self, PyObject* args) {
+    int n = PyInt_AsLong(args);
+    if (n > 0)
+      return Py_BuildValue("i", pcg32_random_bounded_divisionless(n));
+    if (!PyErr_Occurred())
+      PyErr_SetString(PyExc_ValueError, "no such random number exist");
+    return NULL;
 }
 
 /**
