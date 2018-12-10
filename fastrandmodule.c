@@ -61,6 +61,7 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 
 #if PY_MAJOR_VERSION >= 3
 #define PyInt_AsLong(x)   PyLong_AsLong(x)
+#define PyInt_AsUnsignedLongLongMask(x) PyLong_AsUnsignedLongLongMask(x)
 #endif
 
  static PyObject*
