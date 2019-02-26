@@ -21,6 +21,7 @@ jobs:
           name: Running auditwheel...
           command: |
               for whl in dist/*.whl; do
+                  pwd;
                   auditwheel -v show "$whl";
                   auditwheel -v repair "$whl";
                   auditwheel -v show "$whl"
