@@ -5,9 +5,6 @@ jobs:
       - image: quay.io/pypa/manylinux1_x86_64
     steps:
       - checkout
-      - run: /opt/python/cp34-cp34mu/bin/python setup.py bdist_wheel
-      - run: /opt/python/cp34-cp34mu/bin/pip install twine
-      - run: /opt/python/cp34-cp34mu/bin/twine upload dist/*
       - run: /opt/python/cp35-cp35mu/bin/python setup.py bdist_wheel
       - run: /opt/python/cp35-cp35mu/bin/pip install twine
       - run: /opt/python/cp35-cp35mu/bin/twine upload dist/*
