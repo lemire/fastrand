@@ -5,11 +5,21 @@ Blog post: [Ranged random-number generation is slow in Python…](https://lemire
 
 Requirements: Linux-like system (including a Mac), a C compiler, Python.
 
+
+```bash
+python setup.py build
+python setup.py install 
+```
+
+or
+
 ```bash
 python setup.py build
 python setup.py install --home=$HOME
 export PYTHONPATH=$PYTHONPATH:~/lib/python
 ```
+
+
 
 Usage... (don't forget to type the above lines in your shell!)
 
