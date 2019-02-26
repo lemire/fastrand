@@ -30,7 +30,7 @@ jobs:
            name: Uploading to pypi
            command: |
                /opt/python/cp37-cp37m/bin/pip install twine
-               /opt/python/cp37-cp37m/bin/twine upload dist/*
+               /opt/python/cp37-cp37m/bin/twine upload wheelhouse/*
 
 workflows:
   version: 2
