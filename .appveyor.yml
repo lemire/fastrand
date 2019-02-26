@@ -22,7 +22,6 @@ install:
 
 test_script:
   - python setup.py install
-  - pytest
 
 after_test:
   - python setup.py bdist_wheel
