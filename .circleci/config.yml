@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker: 
-      - image: "manyunix:latest"
+      - image: quay.io/pypa/manylinux1_x86_64
     steps:
       - checkout 
       - run: pip install setuptools
