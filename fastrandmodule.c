@@ -25,6 +25,15 @@ static inline uint32_t pcg32_random(void) {
 }
 
 
+static inline void pcg32_init_state(uint32_t state) {
+    pcg32_global.state = state;
+}
+
+static inline void pcg32_init_inc(uint32_t inc) {
+    pcg32_global.inc = inc | 1;
+}
+
+
 static PyObject*
 pcg32(PyObject* self, PyObject* args)
 {
@@ -50,16 +59,34 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 }
 
 
-static PyObject*
-pcg32bounded(PyObject* self, PyObject* args)
-{
-    // int n;
-    //if (!PyArg_ParseTuple(args, "i", &n))
-    //    return NULL;
-    long n = PyLong_AsLong(args);
-    if (n <= 0) return PyErr_Occurred() ? NULL : (Py_INCREF(Py_None), Py_None);
-    return Py_BuildValue("i", pcg32_random_bounded_divisionless(n));
+#if PY_MAJOR_VERSION >= 3
+#define PyInt_AsLong(x)   PyLong_AsLong(x)
+#define PyInt_AsUnsignedLongLongMask(x) PyLong_AsUnsignedLongLongMask(x)
+#endif
+
+ static PyObject*
+pcg32bounded(PyObject* self, PyObject* args) {
+    long n = PyInt_AsLong(args);
+    if ((n > 0) && (n <= UINT32_MAX))
+      return Py_BuildValue("i", pcg32_random_bounded_divisionless((uint32_t)n));
+    if (!PyErr_Occurred())
+      PyErr_SetString(PyExc_ValueError, "no such random number exist");
+    return NULL;
 }
+
+static void
+pcg32inc(PyObject* self, PyObject* args) {
+    long n = PyInt_AsLong(args);
+    pcg32_init_inc(n);
+}
+
+static void
+pcg32state(PyObject* self, PyObject* args) {
+    long n = PyInt_AsLong(args);
+    pcg32_init_state((uint32_t)n);
+}
+
+
 
 /**
 * Vigna's
@@ -86,8 +113,27 @@ xorshift(PyObject* self, PyObject* args)
 
 
 
+static inline void xorshift128plus_init_state1(uint64_t state1) {
+    xorshift128plus_s[0] = state1;
+}
 
 
+
+static inline void xorshift128plus_init_state2(uint64_t state2) {
+    xorshift128plus_s[1] = state2;
+}
+
+static void
+xorshift128plus_seed1(PyObject* self, PyObject* args) {
+    uint64_t n = PyInt_AsUnsignedLongLongMask(args);
+    xorshift128plus_init_state1(n);
+}
+
+static void
+xorshift128plus_seed2(PyObject* self, PyObject* args) {
+    uint64_t n = PyInt_AsUnsignedLongLongMask(args);
+    xorshift128plus_init_state2(n);
+}
 
 
 
@@ -99,6 +145,10 @@ static PyMethodDef FastRandMethods[] =
      {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG"},
      //{"pcg32bounded", pcg32bounded, METH_VARARGS, "generate random integer in the interval [0,range) using PCG."},
      {"pcg32bounded", pcg32bounded, METH_O, "generate random integer in the interval [0,range) using PCG."},
+     {"pcg32inc", pcg32inc, METH_O, "change the increment parameter of the pcg32 generator (global, for experts)."},
+     {"pcg32_seed", pcg32state, METH_O, "seed the pcg32 generator (global)."},
+     {"xorshift128plus_seed1", xorshift128plus_seed1, METH_O, "seed the xorshift128plus generator (global, first 64 bits)."},
+     {"xorshift128plus_seed2", xorshift128plus_seed2, METH_O, "seed the xorshift128plus generator (global, second 64 bits)."},
      {NULL, NULL, 0, NULL}
 };
 

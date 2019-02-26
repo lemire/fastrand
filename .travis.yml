@@ -1,0 +1,22 @@
+language: python
+
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env: PIP=pip
+    - os: osx
+      language: generic
+      env: PIP=pip2
+
+env:
+  global:
+    - TWINE_USERNAME=lemire
+      # Note: TWINE_PASSWORD is set in Travis settings
+
+script:
+  - $PIP install cibuildwheel==0.7.1
+  - cibuildwheel --output-dir wheelhouse
+  - python -m pip install twine
+  - python -m twine upload wheelhouse/*.whl
