@@ -4,12 +4,13 @@ Fast random number generation in Python using PCG
 Blog post: [Ranged random-number generation is slow in Python…](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
 
 
-If you have Linux or Windows, you should be able to do just pip install...
+If you have Linux, macOS or Windows, you should be able to do just pip install...
 
 ```
 pip install fastrand
 ```
 
+You may need root access (sudo on macOS and Linux).
 
 
 
