@@ -1,9 +1,37 @@
 version: 2
 jobs:
   build:
-    docker: 
+    docker:
       - image: quay.io/pypa/manylinux1_x86_64
     steps:
-      - checkout 
+      - checkout
       - run: /opt/python/cp27-cp27mu/bin/python setup.py bdist_wheel
-      - run: twine upload dist/*
+      - run: /opt/python/cp27-cp27mu/bin/pip install twine
+      - run: /opt/python/cp27-cp27mu/bin/twine upload dist/*
+      - run: /opt/python/cp34-cp34mu/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp34-cp34mu/bin/pip install twine
+      - run: /opt/python/cp34-cp34mu/bin/twine upload dist/*
+      - run: /opt/python/cp35-cp35mu/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp35-cp35mu/bin/pip install twine
+      - run: /opt/python/cp35-cp35mu/bin/twine upload dist/*
+      - run: /opt/python/cp36-cp36mu/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp36-cp36mu/bin/pip install twine
+      - run: /opt/python/cp36-cp36mu/bin/twine upload dist/*
+      - run: /opt/python/cp37-cp37mu/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp37-cp37mu/bin/pip install twine
+      - run: /opt/python/cp37-cp37mu/bin/twine upload dist/*
+      - run: /opt/python/cp27-cp27m/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp27-cp27m/bin/pip install twine
+      - run: /opt/python/cp27-cp27m/bin/twine upload dist/*
+      - run: /opt/python/cp34-cp34m/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp34-cp34m/bin/pip install twine
+      - run: /opt/python/cp34-cp34m/bin/twine upload dist/*
+      - run: /opt/python/cp35-cp35m/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp35-cp35m/bin/pip install twine
+      - run: /opt/python/cp35-cp35m/bin/twine upload dist/*
+      - run: /opt/python/cp36-cp36m/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp36-cp36m/bin/pip install twine
+      - run: /opt/python/cp36-cp36m/bin/twine upload dist/*
+      - run: /opt/python/cp37-cp37m/bin/python setup.py bdist_wheel
+      - run: /opt/python/cp37-cp37m/bin/pip install twine
+      - run: /opt/python/cp37-cp37m/bin/twine upload dist/*
