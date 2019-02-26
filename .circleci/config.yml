@@ -5,6 +5,7 @@ jobs:
       - image: "manyunix:latest"
     steps:
       - checkout 
+      - run: pip install setuptools
       - run: python setup.py install
       - run: python setup.py bdist_wheel
       - run: twine upload dist/*
