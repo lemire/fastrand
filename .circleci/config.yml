@@ -1,0 +1,10 @@
+version: 2
+jobs:
+  build:
+    docker: 
+      - image: "manyunix:latest"
+    steps:
+      - checkout 
+      - run: python setup.py install
+      - run: python setup.py bdist_wheel
+      - run: twine upload dist/*
