@@ -5,6 +5,5 @@ jobs:
       - image: quay.io/pypa/manylinux1_x86_64
     steps:
       - checkout 
-      - run: python setup.py install
-      - run: python setup.py bdist_wheel
+      - run: /opt/python/python-cp37-cp37mu setup.py bdist_wheel
       - run: twine upload dist/*
