@@ -3,7 +3,17 @@ Fast random number generation in Python using PCG
 
 Blog post: [Ranged random-number generation is slow in Python…](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
 
-Requirements: Linux-like system (including a Mac), a C compiler, Python.
+
+If you have Linux or Windows, you should be able to do just pip install...
+
+```
+pip install fastrand
+```
+
+
+
+
+Generally, you can build the library as follows (if you have root):
 
 
 ```bash
