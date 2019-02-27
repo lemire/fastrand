@@ -32,4 +32,5 @@ artifacts:
 deploy_script:
   # Check to see if the current build is for a tag push, not just a regular commit.
   # If it is, we upload the produced wheels to pypi (only on success)
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq $TRUE) { pip install twine; twine upload dist/* }
+  #- ps: if ($env:APPVEYOR_REPO_TAG -eq $TRUE) { pip install twine; twine upload dist/* }
+  - ps: pip install twine; twine upload dist/* 
