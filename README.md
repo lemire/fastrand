@@ -1,4 +1,6 @@
 # fastrand
+[![Code Quality: Cpp](https://img.shields.io/lgtm/grade/cpp/g/lemire/fastrand.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lemire/fastrand/context:cpp)
+
 Fast random number generation in Python using PCG
 
 Blog post: [Ranged random-number generation is slow in Python…](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
