@@ -74,16 +74,18 @@ pcg32bounded(PyObject* self, PyObject* args) {
     return NULL;
 }
 
-static void
+static PyObject*
 pcg32inc(PyObject* self, PyObject* args) {
     long n = PyInt_AsLong(args);
     pcg32_init_inc(n);
+    return Py_None;
 }
 
-static void
+static PyObject*
 pcg32state(PyObject* self, PyObject* args) {
     long n = PyInt_AsLong(args);
     pcg32_init_state((uint32_t)n);
+    return Py_None;
 }
 
 
@@ -123,16 +125,18 @@ static inline void xorshift128plus_init_state2(uint64_t state2) {
     xorshift128plus_s[1] = state2;
 }
 
-static void
+static PyObject*
 xorshift128plus_seed1(PyObject* self, PyObject* args) {
     uint64_t n = PyInt_AsUnsignedLongLongMask(args);
     xorshift128plus_init_state1(n);
+    return Py_None;
 }
 
-static void
+static PyObject*
 xorshift128plus_seed2(PyObject* self, PyObject* args) {
     uint64_t n = PyInt_AsUnsignedLongLongMask(args);
     xorshift128plus_init_state2(n);
+    return Py_None;
 }
 
 
@@ -143,7 +147,6 @@ static PyMethodDef FastRandMethods[] =
 {
      {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits)"},
      {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG"},
-     //{"pcg32bounded", pcg32bounded, METH_VARARGS, "generate random integer in the interval [0,range) using PCG."},
      {"pcg32bounded", pcg32bounded, METH_O, "generate random integer in the interval [0,range) using PCG."},
      {"pcg32inc", pcg32inc, METH_O, "change the increment parameter of the pcg32 generator (global, for experts)."},
      {"pcg32_seed", pcg32state, METH_O, "seed the pcg32 generator (global)."},
