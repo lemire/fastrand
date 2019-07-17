@@ -63,4 +63,4 @@ Also look at https://github.com/rkern/line_profiler
 ## Reference
 
 * http://www.pcg-random.org
-* Daniel Lemire, [Fast Random Integer Generation in an Interval](https://arxiv.org/abs/1805.10941), ACM Transactions on Modeling and Computer Simulation (to appear)
+* Daniel Lemire, [Fast Random Integer Generation in an Interval](https://arxiv.org/abs/1805.10941), ACM Transactions on Modeling and Computer Simulation, Volume 29 Issue 1, February 2019 
