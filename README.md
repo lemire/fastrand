@@ -56,6 +56,12 @@ python -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
 1000000 loops, best of 3: 0.795 usec per loop
 ```
 
+## Changing the seed and multiple streams
+
+- You can change the seed with a function like `pcg32_seed`. The seed determines the random values you get.
+
+- If you need to produce multiple streams of random numbers, merely changing the seed is not enough. You are better off using different increments by calling the `pcg32inc`. The increments should all be distinct. Note that the least significant bit of the increment is always set to 1 no matter which value you pass: so make sure your increments are distinct 31-bit values (ignoring the least significant bit).
+
 ## future work
 
 Also look at https://github.com/rkern/line_profiler
