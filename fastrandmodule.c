@@ -15,7 +15,7 @@ static pcg32_random_t pcg32_global = { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdb
 static inline uint32_t pcg32_random_r(pcg32_random_t* rng) {
     uint64_t oldstate = rng->state;
     rng->state = oldstate * 6364136223846793005ULL + rng->inc;
-    uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
+    uint32_t xorshifted = (uint32_t)(((oldstate >> 18u) ^ oldstate) >> 27u);
     uint32_t rot = oldstate >> 59u;
     return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
 }
@@ -71,21 +71,21 @@ pcg32bounded(PyObject* self, PyObject* args) {
       return Py_BuildValue("i", pcg32_random_bounded_divisionless((uint32_t)n));
     if (!PyErr_Occurred())
       PyErr_SetString(PyExc_ValueError, "no such random number exist");
-    return NULL;
+    Py_RETURN_NONE;
 }
 
 static PyObject*
 pcg32inc(PyObject* self, PyObject* args) {
     long n = PyInt_AsLong(args);
-    pcg32_init_inc(n);
-    return Py_None;
+    pcg32_init_inc((uint32_t)n);
+    Py_RETURN_NONE;
 }
 
 static PyObject*
 pcg32state(PyObject* self, PyObject* args) {
     long n = PyInt_AsLong(args);
     pcg32_init_state((uint32_t)n);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 
@@ -129,14 +129,14 @@ static PyObject*
 xorshift128plus_seed1(PyObject* self, PyObject* args) {
     uint64_t n = PyInt_AsUnsignedLongLongMask(args);
     xorshift128plus_init_state1(n);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 static PyObject*
 xorshift128plus_seed2(PyObject* self, PyObject* args) {
     uint64_t n = PyInt_AsUnsignedLongLongMask(args);
     xorshift128plus_init_state2(n);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 
