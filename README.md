@@ -14,6 +14,12 @@ pip install fastrand
 
 You may need root access (sudo on macOS and Linux).
 
+It is sometimes useful to install a specific version, you can do so as follows;
+
+```
+pip install fastrand==1.2.4
+```
+
 
 
 Generally, you can build the library as follows (if you have root):
