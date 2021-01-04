@@ -37,7 +37,7 @@ static inline void pcg32_init_inc(uint32_t inc) {
 static PyObject*
 pcg32(PyObject* self, PyObject* args)
 {
-    return Py_BuildValue("i", pcg32_random());
+    return Py_BuildValue("I", pcg32_random());
 }
 
 static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
@@ -68,7 +68,7 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 pcg32bounded(PyObject* self, PyObject* args) {
     long n = PyInt_AsLong(args);
     if ((n > 0) && (n <= UINT32_MAX))
-      return Py_BuildValue("i", pcg32_random_bounded_divisionless((uint32_t)n));
+      return Py_BuildValue("I", pcg32_random_bounded_divisionless((uint32_t)n));
     if (!PyErr_Occurred())
       PyErr_SetString(PyExc_ValueError, "no such random number exist");
     Py_RETURN_NONE;
@@ -109,7 +109,7 @@ uint64_t xorshift128plus(void) {
 static PyObject*
 xorshift(PyObject* self, PyObject* args)
 {
-    return Py_BuildValue("l", xorshift128plus());
+    return Py_BuildValue("K", xorshift128plus());
 }
 
 
