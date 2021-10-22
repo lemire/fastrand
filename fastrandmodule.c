@@ -25,11 +25,11 @@ static inline uint32_t pcg32_random(void) {
 }
 
 
-static inline void pcg32_init_state(uint32_t state) {
+static inline void pcg32_init_state(uint64_t state) {
     pcg32_global.state = state;
 }
 
-static inline void pcg32_init_inc(uint32_t inc) {
+static inline void pcg32_init_inc(uint64_t inc) {
     pcg32_global.inc = inc | 1;
 }
 
@@ -76,15 +76,15 @@ pcg32bounded(PyObject* self, PyObject* args) {
 
 static PyObject*
 pcg32inc(PyObject* self, PyObject* args) {
-    long n = PyInt_AsLong(args);
-    pcg32_init_inc((uint32_t)n);
+    uint64_t n = PyInt_AsUnsignedLongLongMask(args);
+    pcg32_init_inc(n);
     Py_RETURN_NONE;
 }
 
 static PyObject*
 pcg32state(PyObject* self, PyObject* args) {
-    long n = PyInt_AsLong(args);
-    pcg32_init_state((uint32_t)n);
+    uint64_t n = PyInt_AsUnsignedLongLongMask(args);
+    pcg32_init_state(n);
     Py_RETURN_NONE;
 }
 

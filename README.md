@@ -64,7 +64,7 @@ python -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
 
 ## Changing the seed and multiple streams
 
-- You can change the seed with a function like `pcg32_seed`. The seed determines the random values you get.
+- You can change the seed with a function like `pcg32_seed`. The seed determines the random values you get. Be mindful that naive seeds (e.g., `int(time.time())`) can deliver poor initial randomness. A few calls to `pcg32()` may help to boost the improve the randomness. Or else you may try a better seed.
 
 - If you need to produce multiple streams of random numbers, merely changing the seed is not enough. You are better off using different increments by calling the `pcg32inc`. The increments should all be distinct. Note that the least significant bit of the increment is always set to 1 no matter which value you pass: so make sure your increments are distinct 31-bit values (ignoring the least significant bit).
 
