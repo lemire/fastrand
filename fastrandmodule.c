@@ -60,19 +60,37 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 
 
 #if PY_MAJOR_VERSION >= 3
-#define PyInt_AsLong(x)   PyLong_AsLong(x)
+#define PyInt_AsLong(x)  PyLong_AsLong(x)
 #define PyInt_AsUnsignedLongLongMask(x) PyLong_AsUnsignedLongLongMask(x)
 #endif
 
- static PyObject*
+static PyObject*
 pcg32bounded(PyObject* self, PyObject* args) {
     long n = PyInt_AsLong(args);
     if ((n > 0) && (n <= UINT32_MAX))
       return Py_BuildValue("I", pcg32_random_bounded_divisionless((uint32_t)n));
-    if (!PyErr_Occurred())
+    if (!PyErr_Occurred()) {
       PyErr_SetString(PyExc_ValueError, "no such random number exist");
+    }
     Py_RETURN_NONE;
 }
+
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+static PyObject*
+pcg32randint(PyObject* self, PyObject *const *args, Py_ssize_t len_args) {
+    long n1 = PyInt_AsLong(args[0]);
+    long n2 = PyInt_AsLong(args[1]);
+    if ((n1 > UINT32_MAX) && (n2 > UINT32_MAX)) {
+        PyErr_SetString(PyExc_ValueError, "the bounds of the interval cannot be greater than 2**32-1");
+        Py_RETURN_NONE;
+    }
+    if(n2 < n1) {
+        PyErr_SetString(PyExc_ValueError, "the second argument must be greater or equal than the first");
+        Py_RETURN_NONE;
+    }
+    return Py_BuildValue("I", n1 + pcg32_random_bounded_divisionless((uint32_t)(n2 - n1 + 1)));
+}
+#endif
 
 static PyObject*
 pcg32inc(PyObject* self, PyObject* args) {
@@ -145,6 +163,9 @@ xorshift128plus_seed2(PyObject* self, PyObject* args) {
 
 static PyMethodDef FastRandMethods[] =
 {
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+    {"pcg32randint", (PyCFunction)pcg32randint, METH_FASTCALL},
+#endif
      {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits)"},
      {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG"},
      {"pcg32bounded", pcg32bounded, METH_O, "generate random integer in the interval [0,range) using PCG."},

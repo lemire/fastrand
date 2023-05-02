@@ -1,8 +1,8 @@
 # fastrand
 
-Fast random number generation in Python using PCG
+Fast random number generation in Python using PCG: Up to 10x faster than random.randint.
 
-Blog post: [Ranged random-number generation is slow in Python…](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
+Blog post: [Ranged random-number generation is slow in Python](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
 
 
 
@@ -14,6 +14,8 @@ import fastrand
 
 print("generate an integer in [0,1001)")
 fastrand.pcg32bounded(1001) 
+print("generate an integer in [100,1000]")
+fastrand.pcg32randint(100,1000) # requires Python 3.7 or better
 print("Generate a random 32-bit integer.")
 fastrand.pcg32()
 ```
@@ -21,12 +23,19 @@ fastrand.pcg32()
 It is nearly an order of magnitude faster than the alternatives:
 
 ```
-python -m timeit -s 'import fastrand' 'fastrand.pcg32bounded(1001)'
-10000000 loops, best of 3: 0.0602 usec per loop
-python -m timeit -s 'import random' 'random.randint(0,1000)'
-1000000 loops, best of 3: 0.698 usec per loop
-python -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
-1000000 loops, best of 3: 0.795 usec per loop
+
+python3 -m timeit -s 'import fastrand' 'fastrand.pcg32bounded(1001)'
+10000000 loops, best of 5: 23.6 nsec per loop
+
+python3 -m timeit -s 'import fastrand' 'fastrand.pcg32randint(100,1000)'
+10000000 loops, best of 5: 24.6 nsec per loop
+
+python3 -m timeit -s 'import random' 'random.randint(0,1000)'
+1000000 loops, best of 5: 216 nsec per loop
+
+python3 -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
+500000 loops, best of 5: 955 nsec per loop
+
 ```
 
 
