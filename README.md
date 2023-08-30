@@ -1,6 +1,6 @@
 # fastrand
 
-Fast random number generation in Python using PCG: Up to 10x faster than random.randint.
+Fast random number generation in an interval in Python using PCG: Up to 10x faster than random.randint.
 
 Blog post: [Ranged random-number generation is slow in Python](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
 
