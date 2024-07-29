@@ -19,7 +19,7 @@ fastrand.pcg32randint(100,1000) # requires Python 3.7 or better
 print("Generate a random 32-bit integer.")
 fastrand.pcg32()
 
-if fastrand.SIXTYFOUR:
+if fastrand.SIXTYFOUR: # support for xorshift128+ is limited to some 64-bit platforms (linux, macos, etc.)
     print("generate an integer in [0,1001)")
     fastrand.xorshift128plusbounded(1001) 
     print("generate an integer in [100,1000]")
@@ -46,7 +46,9 @@ python3 -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
 
 ```
 
-The pcg32 is a 32-bit generator so it generates values in the interval from `0` to `2**32-1`.
+The pcg32 generator is a 32-bit generator so it generates values in the interval from `0` to `2**32-1`.
+The xorshift128+ generator is a 64-bit generator so that it can generate values in a 64-bit range (up to `2**64-1`).
+
 
 If you have Linux, macOS or Windows, you should be able to do just pip install...
 
