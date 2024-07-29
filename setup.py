@@ -4,7 +4,7 @@ module1 = Extension('fastrand', sources = ['fastrandmodule.c'])
 
 setup (name = 'fastrand',
         author="Daniel Lemire",
-        version = '1.8.0',
+        version = '2.0.0',
         author_email='daniel@lemire.me',
         long_description = open('README.md', 'r', encoding="utf-8").read(),
         long_description_content_type = 'text/markdown',

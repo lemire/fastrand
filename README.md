@@ -18,6 +18,14 @@ print("generate an integer in [100,1000]")
 fastrand.pcg32randint(100,1000) # requires Python 3.7 or better
 print("Generate a random 32-bit integer.")
 fastrand.pcg32()
+
+if fastrand.SIXTYFOUR:
+    print("generate an integer in [0,1001)")
+    fastrand.xorshift128plusbounded(1001) 
+    print("generate an integer in [100,1000]")
+    fastrand.xorshift128plusrandint(100,1000) # requires Python 3.7 or better
+    print("Generate a random 64-bit integer.")
+    fastrand.xorshift128plus()
 ```
 
 It is nearly an order of magnitude faster than the alternatives:
@@ -76,9 +84,8 @@ export PYTHONPATH=$PYTHONPATH:~/lib/python
 ## Changing the seed and multiple streams
 
 - You can change the seed with a function like `pcg32_seed`. The seed determines the random values you get. Be mindful that naive seeds (e.g., `int(time.time())`) can deliver poor initial randomness. A few calls to `pcg32()` may help to boost the improve the randomness. Or else you may try a better seed.
-
 - If you need to produce multiple streams of random numbers, merely changing the seed is not enough. You are better off using different increments by calling the `pcg32inc`. The increments should all be distinct. Note that the least significant bit of the increment is always set to 1 no matter which value you pass: so make sure your increments are distinct 31-bit values (ignoring the least significant bit).
-
+- You may also initialize xorshift128+ with `xorshift128plus_seed1` and `xorshift128plus_seed2`.
 
 ## Reference
 
