@@ -38,6 +38,7 @@ python3 -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
 
 ```
 
+The pcg32 is a 32-bit generator so it generates values in the interval from `0` to `2**32-1`.
 
 If you have Linux, macOS or Windows, you should be able to do just pip install...
 
