@@ -167,8 +167,8 @@ static PyMethodDef FastRandMethods[] =
     {"pcg32randint", (PyCFunction)pcg32randint, METH_FASTCALL},
 #endif
      {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits)"},
-     {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG"},
-     {"pcg32bounded", pcg32bounded, METH_O, "generate random integer in the interval [0,range) using PCG."},
+     {"pcg32", pcg32, METH_NOARGS, "generate random integer (32 bits) using PCG,a 32-bit is no larger than 2**32-1."},
+     {"pcg32bounded", pcg32bounded, METH_O, "generate random integer in the 32-bit interval [0,range) using PCG. A 32-bit integer is no larger than 2**32-1."},
      {"pcg32inc", pcg32inc, METH_O, "change the increment parameter of the pcg32 generator (global, for experts)."},
      {"pcg32_seed", pcg32state, METH_O, "seed the pcg32 generator (global)."},
      {"xorshift128plus_seed1", xorshift128plus_seed1, METH_O, "seed the xorshift128plus generator (global, first 64 bits)."},
