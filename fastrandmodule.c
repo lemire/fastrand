@@ -122,7 +122,12 @@ pcg32state(PyObject* self, PyObject* args) {
     Py_RETURN_NONE;
 }
 
-
+static PyObject*
+pcg32_uniform(PyObject* self, PyObject* args) {
+    uint32_t r = pcg32_random();
+    double result = (double)r * 0x1p-32; // Divide by 2^32
+    return Py_BuildValue("d", result);
+}
 
 /**
 * Vigna's
@@ -229,8 +234,12 @@ xorshift128plus_seed2(PyObject* self, PyObject* args) {
     Py_RETURN_NONE;
 }
 
-
-
+static PyObject*
+xorshift128plus_uniform(PyObject* self, PyObject* args) {
+    uint64_t r = xorshift128plus();
+    double result = (double)r * 0x1p-64; // Divide by 2^64
+    return Py_BuildValue("d", result);
+}
 
 
 static PyMethodDef FastRandMethods[] =
@@ -245,8 +254,10 @@ static PyMethodDef FastRandMethods[] =
     {"pcg32randint", (PyCFunction)pcg32randint, METH_FASTCALL, "Generate random integer in the interval provided using PCG32. The interval should be no wider than 2**32-1 and the parameters must be representable as a long which is a 64-bit integer on 64-bit platforms."},
 #endif
      {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits) using xorshift128+"},
+     {"xorshift128plus_uniform", xorshift128plus_uniform, METH_NOARGS, "Generate a random double in [0, 1) using xorshift128+."},
      {"pcg32", pcg32, METH_NOARGS, "Generate random integer (32 bits) using PCG32, a 32-bit integer is no larger than 2**32-1."},
      {"pcg32bounded", pcg32bounded, METH_O, "Generate random integer in the 32-bit interval [0,range) using PCG32. A 32-bit integer is no larger than 2**32-1."},
+     {"pcg32_uniform", pcg32_uniform, METH_NOARGS, "Generate a random double in [0, 1) using PCG32."},
      {"pcg32inc", pcg32inc, METH_O, "change the increment parameter of the pcg32 generator (global, for experts)."},
      {"pcg32_seed", pcg32state, METH_O, "seed the pcg32 generator (global)."},
      {"xorshift128plus_seed1", xorshift128plus_seed1, METH_O, "seed the xorshift128+ generator (global, first 64 bits)."},
