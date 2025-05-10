@@ -237,7 +237,7 @@ xorshift128plus_seed2(PyObject* self, PyObject* args) {
 static PyObject*
 xorshift128plus_uniform(PyObject* self, PyObject* args) {
     uint64_t r = xorshift128plus();
-    double result = (double)r * 0x1p-64; // Divide by 2^64
+    double result = (double)(r & 0x1FFFFFFFFFFFFF) * 0x1p-53; // Divide by 2^53
     return Py_BuildValue("d", result);
 }
 
