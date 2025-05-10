@@ -125,7 +125,7 @@ pcg32state(PyObject* self, PyObject* args) {
 static PyObject*
 pcg32_uniform(PyObject* self, PyObject* args) {
     uint32_t r = pcg32_random();
-    double result = (double)(r & 0x00FFFFFF) * 0x1p-24; // Divide by 2^24
+    double result = (double)r * 0x1p-32; // Divide by 2^32
     return Py_BuildValue("d", result);
 }
 
