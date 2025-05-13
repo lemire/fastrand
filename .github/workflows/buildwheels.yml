@@ -50,7 +50,6 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: dist
-          pattern: *-artifact*
           merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@v1.5.0
