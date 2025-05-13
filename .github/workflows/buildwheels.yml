@@ -36,7 +36,7 @@ jobs:
         with:
           config-file: "{package}/pyproject-cibuildwheel.toml"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
 
