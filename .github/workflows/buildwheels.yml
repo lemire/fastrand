@@ -1,13 +1,12 @@
-
 name: Build and upload wheels
 
 on:
   push:
     tags:
       - 'v[0-9]+\.[0-9]+\.[0-9]+'
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
-
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
@@ -17,9 +16,11 @@ jobs:
       - name: Build sdist
         run: pipx run build --sdist
 
-      - uses: actions/upload-artifact@v3.1.3
+      - uses: actions/upload-artifact@v4
         with:
+          name: sdist-artifact
           path: dist/*.tar.gz
+          if-no-files-found: error
 
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
@@ -38,18 +39,19 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: wheel-artifact-${{ matrix.os }}
           path: ./wheelhouse/*.whl
+          if-no-files-found: error
 
   upload_pypi:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4.1.7
+      - uses: actions/download-artifact@v4
         with:
-          # unpacks default artifact into dist/
-          # if `name: artifact` is omitted, the action will create extra parent dir
-          name: artifact
           path: dist
+          pattern: *-artifact*
+          merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@v1.5.0
         with:
