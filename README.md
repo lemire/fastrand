@@ -7,7 +7,7 @@ Blog post: [Ranged random-number generation is slow in Python](https://lemire.me
 
 
 
-Usage... (don't forget to type the above lines in your shell!)
+Usage... 
 
 ```python
 import fastrand
@@ -27,6 +27,8 @@ if fastrand.SIXTYFOUR: # support for xorshift128+ is limited to some 64-bit plat
     print("Generate a random 64-bit integer.")
     fastrand.xorshift128plus()
 ```
+
+We also include functions for fast float generation.
 
 It is nearly an order of magnitude faster than the alternatives:
 
