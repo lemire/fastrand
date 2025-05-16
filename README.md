@@ -1,6 +1,6 @@
 # fastrand
 
-Fast random number generation in an interval in Python using PCG: Up to 10x faster than random.randint.
+Fast random number generation in an interval in Python: Up to 10x faster than random.randint.
 
 Blog post: [Ranged random-number generation is slow in Python](https://lemire.me/blog/2016/03/21/ranged-random-number-generation-is-slow-in-python/)
 
@@ -18,6 +18,8 @@ print("generate an integer in [100,1000]")
 fastrand.pcg32randint(100,1000) # requires Python 3.7 or better
 print("Generate a random 32-bit integer.")
 fastrand.pcg32()
+print("Generate a number in [0,1).")
+fastrand.pcg32_uniform()
 
 if fastrand.SIXTYFOUR: # support for xorshift128+ is limited to some 64-bit platforms (linux, macos, etc.)
     print("generate an integer in [0,1001)")
@@ -26,6 +28,8 @@ if fastrand.SIXTYFOUR: # support for xorshift128+ is limited to some 64-bit plat
     fastrand.xorshift128plusrandint(100,1000) # requires Python 3.7 or better
     print("Generate a random 64-bit integer.")
     fastrand.xorshift128plus()
+    print("Generate a number in [0,1).")
+    fastrand.xorshift128plus_uniform()
 ```
 
 We also include functions for fast float generation.
@@ -43,6 +47,7 @@ python3 -m timeit -s 'import fastrand' 'fastrand.pcg32randint(100,1000)'
 python3 -m timeit -s 'import random' 'random.randint(0,1000)'
 1000000 loops, best of 5: 216 nsec per loop
 
+# if you have numpy:
 python3 -m timeit -s 'import numpy' 'numpy.random.randint(0, 1000)'
 500000 loops, best of 5: 955 nsec per loop
 

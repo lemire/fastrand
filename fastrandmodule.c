@@ -3,18 +3,22 @@
 #include <limits.h>
 #include <stddef.h>
 
-/*
-pgc
-*/
+/***
+ * PGC32
+ * https://www.pcg-random.org/
+ */
 
 struct pcg_state_setseq_64 {    // Internals are *Private*.
     uint64_t state;             // RNG state.  All values are possible.
     uint64_t inc;               // Controls which RNG sequence (stream) is
     // selected. Must *always* be odd.
 };
+// This is the global state for the PCG32 generator.
 typedef struct pcg_state_setseq_64 pcg32_random_t;
 static pcg32_random_t pcg32_global = { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL };
 
+// Generate a random number in the range [0, 2**32-1]
+// This is the PCG32 algorithm, which is a fast and efficient random number generator.
 static inline uint32_t pcg32_random_r(pcg32_random_t* rng) {
     uint64_t oldstate = rng->state;
     rng->state = oldstate * 6364136223846793005ULL + rng->inc;
@@ -23,19 +27,21 @@ static inline uint32_t pcg32_random_r(pcg32_random_t* rng) {
     return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
 }
 
+// Generate a random number in the range [0, 2**32-1]
+// This is a wrapper function that uses the global state.
 static inline uint32_t pcg32_random(void) {
     return pcg32_random_r(&pcg32_global);
 }
 
-
+// Initialize the PCG32 generator with a state and increment.
 static inline void pcg32_init_state(uint64_t state) {
     pcg32_global.state = state;
 }
 
+// Initialize the PCG32 generator with an increment.
 static inline void pcg32_init_inc(uint64_t inc) {
     pcg32_global.inc = inc | 1;
 }
-
 
 static PyObject*
 pcg32(PyObject* self, PyObject* args)
@@ -43,6 +49,7 @@ pcg32(PyObject* self, PyObject* args)
     return Py_BuildValue("I", pcg32_random());
 }
 
+// Generate a random number in the range [0, range)
 static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
     uint64_t random32bit, multiresult;
     uint32_t leftover;
@@ -66,7 +73,7 @@ static inline uint32_t pcg32_random_bounded_divisionless(uint32_t range) {
 #define PyInt_AsLong(x)  PyLong_AsLong(x)
 #define PyInt_AsUnsignedLongLong(x) PyLong_AsUnsignedLongLong(x)
 #define PyInt_AsUnsignedLongLongMask(x) PyLong_AsUnsignedLongLongMask(x)
-#endif
+#endif // PY_MAJOR_VERSION >= 3
 
 static PyObject*
 pcg32bounded(PyObject* self, PyObject* args) {
@@ -106,7 +113,7 @@ pcg32randint(PyObject* self, PyObject *const *args, Py_ssize_t len_args) {
     }
     return Py_BuildValue("I", n1 + pcg32_random_bounded_divisionless((uint32_t)(n2 - n1 + 1)));
 }
-#endif
+#endif // #if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
 
 static PyObject*
 pcg32inc(PyObject* self, PyObject* args) {
@@ -130,11 +137,14 @@ pcg32_uniform(PyObject* self, PyObject* args) {
 }
 
 /**
-* Vigna's
+* Vigna's xorshift128+ generator
+* http://xorshift.di.unimi.it/xorshift128plus.c
 */
 
+// This is the global state for the xorshift128+ generator.
 uint64_t xorshift128plus_s[2]= {3678629397846363829,2900481245226533291};
 
+// Generate a random number in the range [0, 2**64-1]
 //http://xorshift.di.unimi.it/xorshift128plus.c
 uint64_t xorshift128plus(void) {
     uint64_t s1 = xorshift128plus_s[0];
@@ -151,21 +161,19 @@ xorshift(PyObject* self, PyObject* args)
     return Py_BuildValue("K", xorshift128plus());
 }
 
-
-
-
+// Seed the xorshift128+ generator with a 64-bit state.
 static inline void xorshift128plus_init_state1(uint64_t state1) {
     xorshift128plus_s[0] = state1;
 }
 
-
-
+// Seed the xorshift128+ generator with a 64-bit state.
 static inline void xorshift128plus_init_state2(uint64_t state2) {
     xorshift128plus_s[1] = state2;
 }
 
-#if defined(__SIZEOF_INT128__) && LONG_WIDTH == 64
+#if defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
 
+// Generate a random number in the range [0, range)
 static inline uint64_t xorshift128plus_random_bounded_divisionless(uint64_t range) {
     uint64_t random64bit;
     __uint128_t multiresult;
@@ -194,9 +202,9 @@ xorshift128plusbounded(PyObject* self, PyObject* args) {
     }
     return Py_BuildValue("K", xorshift128plus_random_bounded_divisionless(n));
 }
-#endif
+#endif // #if defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
 
-#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7 && ULLONG_WIDTH == 64
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7 && INTPTR_MAX == INT64_MAX
 static PyObject*
 xorshift128plusrandint(PyObject* self, PyObject *const *args, Py_ssize_t len_args) {
     uint64_t n1 = (uint64_t)PyInt_AsUnsignedLongLong(args[0]);
@@ -219,7 +227,8 @@ xorshift128plusrandint(PyObject* self, PyObject *const *args, Py_ssize_t len_arg
     }
     return Py_BuildValue("K", n1 + xorshift128plus_random_bounded_divisionless((uint64_t)(n2 - n1 + 1)));
 }
-#endif
+#endif // PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7 && INTPTR_MAX == INT64_MAX
+
 static PyObject*
 xorshift128plus_seed1(PyObject* self, PyObject* args) {
     uint64_t n = PyInt_AsUnsignedLongLongMask(args);
@@ -241,18 +250,19 @@ xorshift128plus_uniform(PyObject* self, PyObject* args) {
     return Py_BuildValue("d", result);
 }
 
-
+// This is the module method table.
+// It defines the functions that will be available in the module.
 static PyMethodDef FastRandMethods[] =
 {
-#if defined(__SIZEOF_INT128__) && ULLONG_WIDTH == 64
+#if defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
     {"xorshift128plusbounded", xorshift128plusbounded, METH_O, "Generate random integer in the interval [0,range) using xorshift128+. The interval should be no wider than 2**64-1 and the parameter must be representable as a 64-bit integer. This function is only available on 64-bit platforms."},
 #if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
     {"xorshift128plusrandint", (PyCFunction)xorshift128plusrandint, METH_FASTCALL, "Generate random integer in the interval provided using xorshift128+. The interval should be no wider than 2**64-1 and the parameters must be representable as 64-bit integers. This function is only available on 64-bit platforms."},
-#endif
-#endif
+#endif // PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+#endif // defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
 #if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
     {"pcg32randint", (PyCFunction)pcg32randint, METH_FASTCALL, "Generate random integer in the interval provided using PCG32. The interval should be no wider than 2**32-1 and the parameters must be representable as a long which is a 64-bit integer on 64-bit platforms."},
-#endif
+#endif // PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
      {"xorshift128plus", xorshift, METH_NOARGS, "generate random integer (64 bits) using xorshift128+"},
      {"xorshift128plus_uniform", xorshift128plus_uniform, METH_NOARGS, "Generate a random double in [0, 1) using xorshift128+."},
      {"pcg32", pcg32, METH_NOARGS, "Generate random integer (32 bits) using PCG32, a 32-bit integer is no larger than 2**32-1."},
@@ -266,12 +276,13 @@ static PyMethodDef FastRandMethods[] =
 };
 
 #if PY_MAJOR_VERSION >= 3
-
+// This is the module definition structure.
+// It defines the name, docstring, and methods of the module.
 static struct PyModuleDef cModFastrand =
 {
     PyModuleDef_HEAD_INIT,
     "fastrand",
-    "",
+    "Fast random number generation in an interval in Python: Up to 10x faster than the standard library", // module documentation,
     -1,
     FastRandMethods
 };
@@ -282,15 +293,15 @@ PyInit_fastrand(void)
 {
     PyObject *module = PyModule_Create(&cModFastrand);
     PyModule_AddStringConstant(module, "__doc__", "Fast random number generators in an interval."); 
-#if defined(__SIZEOF_INT128__) && ULLONG_WIDTH == 64
+#if defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
     PyModule_AddIntConstant(module, "SIXTYFOUR", 1);
-#else
+#else // defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
     PyModule_AddIntConstant(module, "SIXTYFOUR", 0);
-#endif
+#endif // defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
     return module;
 }
 
-#else
+#else // PY_MAJOR_VERSION >= 3
 
 PyMODINIT_FUNC
 initfastrand(void)
@@ -299,4 +310,4 @@ initfastrand(void)
 
 }
 
-#endif
+#endif // PY_MAJOR_VERSION >= 3
