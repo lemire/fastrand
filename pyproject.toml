@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=74.1.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -35,11 +35,6 @@ classifiers = [
 Homepage = "https://github.com/lemire/fastrand"
 Repository = "https://github.com/lemire/fastrand"
 Issues = "https://github.com/lemire/fastrand/issues"
-
-[tool.setuptools]
-ext-modules = [
-    {name = "fastrand", sources = ["fastrandmodule.c"]}
-]
 
 [tool.cibuildwheel]
 # Build wheels for all platforms
