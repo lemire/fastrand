@@ -44,7 +44,7 @@ archs = ["x86_64", "universal2", "arm64"]
 
 [tool.cibuildwheel.linux]
 # Build for common Linux architectures
-archs = ["x86_64", "aarch64"]
+archs = ["x86_64"]
 
 [tool.cibuildwheel.windows]
 # Build for 64-bit Windows (32-bit is rarely needed nowadays)
