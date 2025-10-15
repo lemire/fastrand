@@ -11,8 +11,7 @@ authors = [
     {name = "Daniel Lemire", email = "daniel@lemire.me"}
 ]
 requires-python = ">=3.7"
-license = "Apache-2.0"
-license-files = ["LICENSE"]
+license = {text = "Apache-2.0"}
 keywords = ["random", "random-number-generator", "pcg", "xorshift", "performance"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
