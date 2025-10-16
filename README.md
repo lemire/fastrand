@@ -57,36 +57,53 @@ The pcg32 generator is a 32-bit generator so it generates values in the interval
 The xorshift128+ generator is a 64-bit generator so that it can generate values in a 64-bit range (up to `2**64-1`).
 
 
+## Installation
+
 If you have Linux, macOS or Windows, you should be able to do just pip install...
 
-```
+```bash
 pip install fastrand
 ```
 
 You may need root access (sudo on macOS and Linux).
 
-It is sometimes useful to install a specific version, you can do so as follows;
+It is sometimes useful to install a specific version, you can do so as follows:
 
-```
+```bash
 pip install fastrand==1.2.4
 ```
 
+### Using uv (recommended)
 
+[uv](https://github.com/astral-sh/uv) is a fast Python package installer and resolver.
 
-Generally, you can build the library as follows (if you have root):
-
+To add fastrand as a dependency to your project:
 
 ```bash
-python setup.py build
-python setup.py install 
+uv add fastrand
 ```
 
-or
+Or to install it directly into your current environment:
 
 ```bash
-python setup.py build
-python setup.py install --home=$HOME
-export PYTHONPATH=$PYTHONPATH:~/lib/python
+uv pip install fastrand
+```
+
+### Building from source
+
+With uv:
+
+```bash
+uv build
+uv pip install dist/*.whl
+```
+
+Or with standard tools:
+
+```bash
+pip install build
+python -m build
+pip install dist/*.whl
 ```
 
 

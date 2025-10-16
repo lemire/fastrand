@@ -20,6 +20,8 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
+wheelhouse/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -60,3 +62,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# uv
+uv.lock
+.venv/

@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=74.1.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastrand"
+version = "3.0.6"
+description = "Fast random number generation in Python"
+readme = "README.md"
+authors = [
+    {name = "Daniel Lemire", email = "daniel@lemire.me"}
+]
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+keywords = ["random", "random-number-generator", "pcg", "xorshift", "performance"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: C",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]
+Homepage = "https://github.com/lemire/fastrand"
+Repository = "https://github.com/lemire/fastrand"
+Issues = "https://github.com/lemire/fastrand/issues"
+
+[tool.setuptools]
+ext-modules = [
+    {name = "fastrand", sources = ["fastrandmodule.c"]}
+]
+
+[tool.cibuildwheel]
+# Build wheels for all platforms
+
+[tool.cibuildwheel.macos]
+# Build for Intel, Apple Silicon, and Universal2 binaries
+archs = ["x86_64", "universal2", "arm64"]
+
+[tool.cibuildwheel.linux]
+# Build for common Linux architectures
+archs = ["x86_64"]
+
+[tool.cibuildwheel.windows]
+# Build for 64-bit Windows (32-bit is rarely needed nowadays)
+archs = ["AMD64"]
