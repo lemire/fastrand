@@ -11,6 +11,8 @@ authors = [
     {name = "Daniel Lemire", email = "daniel@lemire.me"}
 ]
 requires-python = ">=3.8"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 license = {text = "Apache-2.0"}
 keywords = ["random", "random-number-generator", "pcg", "xorshift", "performance"]
 classifiers = [
@@ -25,6 +27,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Libraries",
 ]
