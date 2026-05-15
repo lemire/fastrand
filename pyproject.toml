@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastrand"
-version = "3.0.8"
+version = "3.1.0"
 description = "Fast random number generation in Python"
 readme = "README.md"
 authors = [
     {name = "Daniel Lemire", email = "daniel@lemire.me"}
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = "Apache-2.0"
 keywords = ["random", "random-number-generator", "pcg", "xorshift", "performance"]
 classifiers = [
@@ -19,7 +19,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Programming Language :: C",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -48,8 +47,9 @@ ext-modules = [
 archs = ["x86_64", "universal2", "arm64"]
 
 [tool.cibuildwheel.linux]
-# Build for common Linux architectures
-archs = ["x86_64"]
+# Build for the runner's native architecture (x86_64 and aarch64 runners
+# are provided separately in the CI matrix, so each builds natively).
+archs = ["native"]
 
 [tool.cibuildwheel.windows]
 # Build for 64-bit Windows (32-bit is rarely needed nowadays)
