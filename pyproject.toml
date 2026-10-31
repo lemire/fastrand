@@ -25,6 +25,8 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Programming Language :: Python :: Free Threading :: 2 - Beta",
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Libraries",
 ]
@@ -40,7 +42,10 @@ ext-modules = [
 ]
 
 [tool.cibuildwheel]
-# Build wheels for all platforms
+# Build wheels for all platforms (CPython 3.9-3.15, plus the free-threaded
+# 3.14t/3.15t variants, which cibuildwheel 4 builds by default).
+test-requires = ["pytest"]
+test-command = "pytest {project}/tests -q"
 
 [tool.cibuildwheel.macos]
 # Build for Intel, Apple Silicon, and Universal2 binaries

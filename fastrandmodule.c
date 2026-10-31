@@ -3,6 +3,22 @@
 #include <limits.h>
 #include <stddef.h>
 
+/*
+ * On free-threaded builds of CPython (3.13t, 3.14t, 3.15t...), there is no
+ * GIL to serialize access to the global generator states, so we protect each
+ * generator with its own lightweight PyMutex. On regular builds, the GIL
+ * already serializes calls and these macros compile to nothing.
+ */
+#ifdef Py_GIL_DISABLED
+static PyMutex pcg32_mutex = {0};
+static PyMutex xorshift128plus_mutex = {0};
+#define FASTRAND_LOCK(m) PyMutex_Lock(&(m))
+#define FASTRAND_UNLOCK(m) PyMutex_Unlock(&(m))
+#else
+#define FASTRAND_LOCK(m) ((void)0)
+#define FASTRAND_UNLOCK(m) ((void)0)
+#endif
+
 /***
  * PGC32
  * https://www.pcg-random.org/
@@ -30,17 +46,24 @@ static inline uint32_t pcg32_random_r(pcg32_random_t* rng) {
 // Generate a random number in the range [0, 2**32-1]
 // This is a wrapper function that uses the global state.
 static inline uint32_t pcg32_random(void) {
-    return pcg32_random_r(&pcg32_global);
+    FASTRAND_LOCK(pcg32_mutex);
+    uint32_t r = pcg32_random_r(&pcg32_global);
+    FASTRAND_UNLOCK(pcg32_mutex);
+    return r;
 }
 
 // Initialize the PCG32 generator with a state and increment.
 static inline void pcg32_init_state(uint64_t state) {
+    FASTRAND_LOCK(pcg32_mutex);
     pcg32_global.state = state;
+    FASTRAND_UNLOCK(pcg32_mutex);
 }
 
 // Initialize the PCG32 generator with an increment.
 static inline void pcg32_init_inc(uint64_t inc) {
+    FASTRAND_LOCK(pcg32_mutex);
     pcg32_global.inc = inc | 1;
+    FASTRAND_UNLOCK(pcg32_mutex);
 }
 
 static PyObject*
@@ -147,12 +170,15 @@ uint64_t xorshift128plus_s[2]= {3678629397846363829,2900481245226533291};
 // Generate a random number in the range [0, 2**64-1]
 //http://xorshift.di.unimi.it/xorshift128plus.c
 uint64_t xorshift128plus(void) {
+    FASTRAND_LOCK(xorshift128plus_mutex);
     uint64_t s1 = xorshift128plus_s[0];
     const uint64_t s0 = xorshift128plus_s[1];
     xorshift128plus_s[0] = s0;
     s1 ^= s1 << 23; // a
     xorshift128plus_s[1] = s1 ^ s0 ^ (s1 >> 18) ^ (s0 >> 5); // b, c
-    return xorshift128plus_s[1] + s0;
+    uint64_t r = xorshift128plus_s[1] + s0;
+    FASTRAND_UNLOCK(xorshift128plus_mutex);
+    return r;
 }
 
 static PyObject*
@@ -163,12 +189,16 @@ xorshift(PyObject* self, PyObject* args)
 
 // Seed the xorshift128+ generator with a 64-bit state.
 static inline void xorshift128plus_init_state1(uint64_t state1) {
+    FASTRAND_LOCK(xorshift128plus_mutex);
     xorshift128plus_s[0] = state1;
+    FASTRAND_UNLOCK(xorshift128plus_mutex);
 }
 
 // Seed the xorshift128+ generator with a 64-bit state.
 static inline void xorshift128plus_init_state2(uint64_t state2) {
+    FASTRAND_LOCK(xorshift128plus_mutex);
     xorshift128plus_s[1] = state2;
+    FASTRAND_UNLOCK(xorshift128plus_mutex);
 }
 
 #if defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
@@ -292,6 +322,17 @@ PyMODINIT_FUNC
 PyInit_fastrand(void)
 {
     PyObject *module = PyModule_Create(&cModFastrand);
+    if (module == NULL) {
+        return NULL;
+    }
+#ifdef Py_GIL_DISABLED
+    // The generator states are protected by mutexes (see above), so the
+    // module is safe to use without the GIL.
+    if (PyUnstable_Module_SetGIL(module, Py_MOD_GIL_NOT_USED) < 0) {
+        Py_DECREF(module);
+        return NULL;
+    }
+#endif
     PyModule_AddStringConstant(module, "__doc__", "Fast random number generators in an interval."); 
 #if defined(__SIZEOF_INT128__) && INTPTR_MAX == INT64_MAX
     PyModule_AddIntConstant(module, "SIXTYFOUR", 1);
