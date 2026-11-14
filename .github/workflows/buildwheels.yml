@@ -44,8 +44,25 @@ jobs:
           path: ./wheelhouse/*.whl
           if-no-files-found: error
 
+  build_pyodide:
+    name: Build Pyodide (WebAssembly) wheels
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v4.3.5
+        env:
+          CIBW_PLATFORM: pyodide
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-artifact-pyodide
+          path: ./wheelhouse/*.whl
+          if-no-files-found: error
+
   upload_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build_wheels, build_pyodide, build_sdist]
     runs-on: ubuntu-latest
     # Only upload to PyPI when triggered by a tag (not manual workflow_dispatch)
     if: startsWith(github.ref, 'refs/tags/')

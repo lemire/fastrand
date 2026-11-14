@@ -1,6 +1,8 @@
 import sys
 import threading
 
+import pytest
+
 import fastrand
 
 
@@ -30,6 +32,7 @@ def test_xorshift128plus():
             assert 100 <= fastrand.xorshift128plusrandint(100, 1000) <= 1000
 
 
+@pytest.mark.skipif(sys.platform == "emscripten", reason="no threads under Pyodide")
 def test_threads():
     errors = []
 
